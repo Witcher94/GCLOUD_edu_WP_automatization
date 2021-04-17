@@ -1,4 +1,4 @@
-#Ansible modules for correct work SEmodule and Timezone module
+#Ansible modules for correct work SELinux and Timezone module
 collections:
   - name: ansible.posix
   - name: community.general
