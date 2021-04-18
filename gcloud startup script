@@ -1,17 +1,17 @@
 #! /bin/bash
 
-#GCSFUSE
+ #GCSFUSE check
 
 if ! [ -x "$(command -v gcfuse)" ]; then
   echo 'Error GCSFUSE is not installed'
 
-  #Adding repository of GCSFUSE
+ #Adding repository of GCSFUSE
 
   export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
   echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
-  #updating repository and installing gcsfuse
+  #Updating repositories and installing gcsfuse
 
   sudo apt update
   sudo apt install gcsfuse
@@ -21,6 +21,24 @@ else
   exit 1
 fi
 
-#Mounting bucket to VM
-1
+ #Mounting bucket to VM
+
+gcsfuse wp-back-bucket /mnt/
+
+  #Creating work directory
+
+mkdir -p -m 755 /var/www/
+
+  #Creating symlink to work directory
+
+ln -s /mnt/ /var/www/
+
+  #the next part under the question// installing dependencies for LAMP Stack
+
+
+
+
+
+
+
 
