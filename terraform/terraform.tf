@@ -24,3 +24,7 @@ module "compute-engine" {
   network    = module.network.id
   depends_on = [module.service-account] #start after module "service account"
 }
+module "load-balancer" {
+  source = "./modules/load-balancer"
+  depends_on = [module.compute-engine]
+}
