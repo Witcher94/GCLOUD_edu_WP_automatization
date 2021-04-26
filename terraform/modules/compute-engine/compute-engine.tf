@@ -11,12 +11,12 @@ module "service-account" {
 
 resource "google_compute_instance" "bastion-edu" {
   name         = "bastion-edu"
-  machine_type = "f1-micro"
+  machine_type = "e1-micro"
   zone         = "europe-west3-c"
   tags         = ["bastion", "public"]
   boot_disk {
     initialize_params {
-      image = "ubuntu-minimal-2004-focal-v20210223a"
+      image = "ubuntu-minimal-2004-lts"
     }
   }
   network_interface {
@@ -30,10 +30,10 @@ resource "google_compute_instance" "bastion-edu" {
 
 #Creating Instance-Template
 
-resource "google_compute_instance_template" "wordpress-template-5" {
+resource "google_compute_instance_template" "wordpress-template" {
   name        = "wordpress-template"
   tags = ["wordpress", "private"]
-  machine_type         = "f1-micro"
+  machine_type         = "e1-micro"
   can_ip_forward       = false
 
   scheduling {
@@ -55,12 +55,57 @@ resource "google_compute_instance_template" "wordpress-template-5" {
     email  = module.service-account.service-account-email
     scopes = ["cloud-platform"]
   }
-
-  metadata_startup_script = ""
+  metadata_startup_script = "${file("./gcloud-startup-script.sh")}"
 }
 
-data "template-file" "default" {
-  template = "${file("./gcloud-startup-script.sh")}"
+#Creating instance-group group
 
+resource "google_compute_region_instance_group_manager" "wordpress-ig" {
+  name = "wordpress-ig"
+  base_instance_name = "wordpress"
+  region = "europe-west3"
+  distribution_policy_zones = [
+    "europe-west3-a",
+    "europe-west3-b",
+    "europe-west3-c"]
 
+  version {
+    instance_template = google_compute_instance_template.wordpress-template.id
+  }
+  named_port {
+    name = "http"
+    port = 80
+  }
+  auto_healing_policies {
+    health_check = google_compute_health_check.wp-heathcheck.id
+    initial_delay_sec = 300
+
+  }
+}
+#Creating autoscaler for IG
+
+resource "google_compute_region_autoscaler" "wordpress-autoscaler" {
+  name   = "wordpress-autoscaler"
+  region = "us-east1"
+  target = google_compute_region_instance_group_manager.wordpress-ig.id
+  autoscaling_policy {
+    max_replicas    = 2
+    min_replicas    = 1
+    cooldown_period = 60
+    cpu_utilization { target = 1 }
+  }
+}
+
+#Adding heathcheck rules for IG
+
+resource "google_compute_health_check" "wp-heathcheck" {
+  name                = "wordpres-health-check"
+  check_interval_sec  = 10
+  timeout_sec         = 5
+  healthy_threshold   = 2
+  unhealthy_threshold = 4
+
+  tcp_health_check {
+    port = "80"
+  }
 }

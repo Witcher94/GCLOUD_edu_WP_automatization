@@ -29,6 +29,8 @@ gcsfuse -o nonemptu -o allow_other wp-back-bucket /mnt/
 
 ln -s /mnt/ /var/www/
 
+
+#change owner ---
   #the next part under the question// installing dependencies for LAMP Stack
 
 

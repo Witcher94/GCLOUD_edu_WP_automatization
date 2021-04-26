@@ -2,8 +2,6 @@ provider "google" {
   credentials = file("service_account.json")
   project     = ""
   region      = "europe-west3"
-  zone        = "europe-west3-c"
-
 }
 module "network" {
   source = "./modules/vpc-network/"

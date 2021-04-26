@@ -40,8 +40,8 @@ resource "google_service_networking_connection" "replica-private-vpc-db-connecti
 
 #Creating Firewall rules
 
-resource "google_compute_firewall" "zone53-network-allow-ssh" {
-  name    = "zone53-network-allow-ssh"
+resource "google_compute_firewall" "network-allow-ssh" {
+  name    = "network-allow-ssh"
   network = google_compute_network.vpc-network.name
 
   allow {
@@ -49,8 +49,8 @@ resource "google_compute_firewall" "zone53-network-allow-ssh" {
     ports    = ["22"]
   }
 }
-resource "google_compute_firewall" "zone53-network-allow-openvpn" {
-  name    = "zone53-network-allow-openvpn"
+resource "google_compute_firewall" "network-allow-openvpn" {
+  name    = "network-allow-openvpn"
   network = google_compute_network.vpc-network.name
 
   allow {
@@ -59,8 +59,8 @@ resource "google_compute_firewall" "zone53-network-allow-openvpn" {
   }
   source_ranges = ["10.10.10.0/28"]
 }
-resource "google_compute_firewall" "zone53-network-allow-web" {
-  name    = "zone53-network-allow-web"
+resource "google_compute_firewall" "network-allow-web" {
+  name    = "network-allow-web"
   network = google_compute_network.vpc-network.name
 
   allow {
@@ -69,8 +69,8 @@ resource "google_compute_firewall" "zone53-network-allow-web" {
   }
   source_ranges = ["10.10.10.16/28"]
 }
-resource "google_compute_firewall" "zone53-network-allow-sql" {
-  name    = "zone53-network-allow-mysql"
+resource "google_compute_firewall" "network-allow-sql" {
+  name    = "network-allow-mysql"
   network = google_compute_network.vpc-network.name
 
   allow {
@@ -83,8 +83,8 @@ resource "google_compute_firewall" "zone53-network-allow-sql" {
 #Creating Cloud NAT/Router
 
 resource "google_compute_router" "vpc-network-router" {
-  name    = "my-zone53-router"
-  region  = "us-east1"
+  name    = "vpc-network-router"
+  region  = "europe-west3"
   network = google_compute_network.vpc-network.id
 }
 
