@@ -1,9 +1,13 @@
+#Importing module for output dependencies in VPC-network
+
 module "network" {
   source = "../vpc-network/"
 }
+#Creating Databases
+
 resource "google_sql_database" "wordpress-database" {
   name     = "wordpress-database"
-  instance = google_sql_database_instance.wordpress-db.name
+  instance = [google_sql_database_instance.wordpress-db.name]
 }
 resource "google_sql_database_instance" "wordpress-db" {
   name             = "wordpress-db-master"
@@ -31,7 +35,7 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
   region           = "us-east1"
   depends_on       = module.network.replica-connection
   deletion_protection  = "false"
-  master_instance_name = google_sql_database_instance.wordpress-db-replica.name
+  master_instance_name = [google_sql_database_instance.wordpress-db-replica.name]
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
