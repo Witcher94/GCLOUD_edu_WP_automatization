@@ -1,6 +1,6 @@
 provider "google" {
   credentials = file("service_account.json")
-  project     = ""
+  project     = "pfaka-education-25433"
   region      = "europe-west3"
 }
 module "network" {
