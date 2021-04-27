@@ -35,7 +35,7 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
   region           = "us-east1"
   depends_on       = [module.network.replica-connection]
   deletion_protection  = "false"
-  master_instance_name = google_sql_database_instance.wordpress-db-replica.name
+  master_instance_name = google_sql_database_instance.wordpress-db.name
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
