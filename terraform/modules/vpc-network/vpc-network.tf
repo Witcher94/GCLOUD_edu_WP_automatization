@@ -104,7 +104,7 @@ resource "google_compute_router_nat" "vpc-network-nat" {
 #Output variables for other modules
 
 output "id" {
-  value = google_compute_global_address.private-ip-address.name
+  value = google_compute_global_address.private-ip-address.id
 }
 output "master-connection" {
   value = google_service_networking_connection.master-private-vpc-db-connection

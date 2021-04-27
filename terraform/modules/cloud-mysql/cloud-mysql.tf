@@ -7,13 +7,13 @@ module "network" {
 
 resource "google_sql_database" "wordpress-database" {
   name     = "wordpress-database"
-  instance = [google_sql_database_instance.wordpress-db.name]
+  instance = google_sql_database_instance.wordpress-db.name
 }
 resource "google_sql_database_instance" "wordpress-db" {
   name             = "wordpress-db-master"
   database_version = "MYSQL_5_6"
   region           = "europe-west-3"
-  depends_on       = module.network.master-connection
+  depends_on       = [module.network.master-connection]
   deletion_protection = "false"
   settings {
     # Second-generation instance tiers are based on the machine
@@ -33,9 +33,9 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
   name             = "wordpress-db-slave"
   database_version = "MYSQL_5_6"
   region           = "us-east1"
-  depends_on       = module.network.replica-connection
+  depends_on       = [module.network.replica-connection]
   deletion_protection  = "false"
-  master_instance_name = [google_sql_database_instance.wordpress-db-replica.name]
+  master_instance_name = google_sql_database_instance.wordpress-db-replica.name
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
