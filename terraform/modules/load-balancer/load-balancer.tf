@@ -33,5 +33,5 @@ resource "google_compute_backend_service" "wordpress-backend" {
     capacity_scaler = 1.0
   }
   name        = "wordpress-backend"
-  health_checks = [module.compute-engine.wp-heath]
+  health_checks = module.compute-engine.wp-heath
 }
