@@ -30,12 +30,12 @@ resource "google_compute_global_address" "private-ip-address" {
 resource "google_service_networking_connection" "master-private-vpc-db-connection" {
   network                 = google_compute_network.vpc-network.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = google_compute_global_address.private-ip-address.name
+  reserved_peering_ranges = [google_compute_global_address.private-ip-address.name]
 }
 resource "google_service_networking_connection" "replica-private-vpc-db-connection" {
   network                 = google_compute_network.vpc-network.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = google_compute_global_address.private-ip-address.name
+  reserved_peering_ranges = [google_compute_global_address.private-ip-address.name]
 }
 
 #Creating Firewall rules
