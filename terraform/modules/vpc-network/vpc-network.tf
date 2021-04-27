@@ -107,10 +107,10 @@ output "id" {
   value = [google_compute_global_address.private-ip-address.name]
 }
 output "master-connection" {
-  value = [google_compute_global_address.private-ip-address.name]
+  value = [google_service_networking_connection.master-private-vpc-db-connection]
 }
 output "replica-connection" {
-  value = [google_compute_global_address.private-ip-address.name]
+  value = [google_service_networking_connection.replica-private-vpc-db-connection]
 }
 output "vpc-network" {
   value = [google_compute_network.vpc-network.id]

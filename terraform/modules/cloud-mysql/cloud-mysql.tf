@@ -13,7 +13,7 @@ resource "google_sql_database_instance" "wordpress-db" {
   name             = "wordpress-db-master"
   database_version = "MYSQL_5_6"
   region           = "europe-west-3"
-  depends_on = module.network.master-connection
+  depends_on       = module.network.master-connection
   deletion_protection = "false"
   settings {
     # Second-generation instance tiers are based on the machine
