@@ -9,13 +9,13 @@ resource "google_compute_subnetwork" "public-subnetwork" {
   name = "bastion-sub"
   ip_cidr_range = "10.10.10.0/28"
   region = "europe-west3"
-  network = [google_compute_network.vpc-network.id]
+  network = google_compute_network.vpc-network.id
 }
 resource "google_compute_subnetwork" "private-subnetwork" {
   name = "wp-sub"
   ip_cidr_range = "10.10.10.16/28"
   region = "europe-west3"
-  network = [google_compute_network.vpc-network.id]
+  network = google_compute_network.vpc-network.id
 }
 
 #Creating connections for mysql DB
@@ -25,17 +25,17 @@ resource "google_compute_global_address" "private-ip-address" {
   purpose = "VPC_PEERING"
   address_type = "INTERNAL"
   prefix_length = 28
-  network = [google_compute_subnetwork.private-subnetwork.id]
+  network = google_compute_subnetwork.private-subnetwork.id
 }
 resource "google_service_networking_connection" "master-private-vpc-db-connection" {
   network                 = google_compute_network.vpc-network.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private-ip-address.name]
+  reserved_peering_ranges = google_compute_global_address.private-ip-address.name
 }
 resource "google_service_networking_connection" "replica-private-vpc-db-connection" {
   network                 = google_compute_network.vpc-network.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private-ip-address.name]
+  reserved_peering_ranges = google_compute_global_address.private-ip-address.name
 }
 
 #Creating Firewall rules
@@ -104,17 +104,17 @@ resource "google_compute_router_nat" "vpc-network-nat" {
 #Output variables for other modules
 
 output "id" {
-  value = [google_compute_global_address.private-ip-address.name]
+  value = google_compute_global_address.private-ip-address.name
 }
 output "master-connection" {
-  value = [google_service_networking_connection.master-private-vpc-db-connection]
+  value = google_service_networking_connection.master-private-vpc-db-connection
 }
 output "replica-connection" {
-  value = [google_service_networking_connection.replica-private-vpc-db-connection]
+  value = google_service_networking_connection.replica-private-vpc-db-connection
 }
 output "vpc-network" {
-  value = [google_compute_network.vpc-network.id]
+  value = google_compute_network.vpc-network.id
 }
 output "public-sub-id" {
-  value = [google_compute_subnetwork.public-subnetwork.id]
+  value = google_compute_subnetwork.public-subnetwork.id
 }

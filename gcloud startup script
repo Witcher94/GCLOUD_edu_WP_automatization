@@ -23,7 +23,7 @@ fi
 
  #Mounting bucket to VM
 
-gcsfuse -o nonemptu -o allow_other wp-back-bucket /mnt/
+gcsfuse -o nonempty -o allow_other wp-back-bucket /mnt/
 
   #Creating symlink to work directory
 
