@@ -2,12 +2,12 @@ provider "google" {
   project     = "pfaka-education-25433"
   region      = "europe-west3"
 }
-module "network" {
-  source = "./modules/vpc-network/"
-}
 module "service-account" {
   source = "./modules/service-account"
-  depends_on = [module.network]
+}
+module "network" {
+  source = "./modules/vpc-network/"
+  depends_on = [module.service-account]
 }
 module "cloud-mysql" {
   source     = "./modules/cloud-mysql"
