@@ -1,5 +1,4 @@
 provider "google" {
-  credentials = file("service_account.json")
   project     = "pfaka-education-25433"
   region      = "europe-west3"
 }
@@ -12,7 +11,6 @@ module "service-account" {
 }
 module "cloud-mysql" {
   source     = "./modules/cloud-mysql"
-  network    = module.network.id #input value from network module for private ip
   depends_on = [module.network]  #start after module "network"
 }
 module "wp-bucket" {
@@ -21,7 +19,6 @@ module "wp-bucket" {
 }
 module "compute-engine" {
   source = "./modules/compute-engine"
-  network    = module.network.id
   depends_on = [module.service-account] #start after module "service account"
 }
 module "load-balancer" {
