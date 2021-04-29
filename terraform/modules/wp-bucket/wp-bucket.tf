@@ -1,6 +1,6 @@
 #Importing module for output dependencies in VPC-network
 
-input module "service-account" {
+module "service-account" {
   source = "../service-account/"
 }
 
