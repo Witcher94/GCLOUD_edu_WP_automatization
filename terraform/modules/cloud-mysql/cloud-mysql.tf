@@ -32,7 +32,7 @@ resource "google_sql_database_instance" "wordpress-db" {
 resource "google_sql_database_instance" "wordpress-db-replica" {
   name             = "wordpress-db-slave"
   database_version = "MYSQL_5_6"
-  region           = "us-east1"
+  region           = "europe-west3"
   depends_on       = [module.network.replica-connection]
   deletion_protection  = "false"
   master_instance_name = google_sql_database_instance.wordpress-db.name

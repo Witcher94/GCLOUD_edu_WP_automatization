@@ -11,7 +11,7 @@ module "service-account" {
 
 resource "google_compute_instance" "bastion-edu" {
   name         = "bastion-edu"
-  machine_type = "e1-micro"
+  machine_type = "e2-micro"
   zone         = "europe-west3-c"
   tags         = ["bastion", "public"]
   boot_disk {

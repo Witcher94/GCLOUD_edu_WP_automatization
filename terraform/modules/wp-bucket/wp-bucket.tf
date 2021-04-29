@@ -1,11 +1,10 @@
 #Importing module for output dependencies in VPC-network
 
-module "service-account" {
+input module "service-account" {
   source = "../service-account/"
 }
 
 #Creating WP-bucket
-
 
 resource "google_storage_bucket" "wp-bucket" {
   name          = "wp-bucket1"
