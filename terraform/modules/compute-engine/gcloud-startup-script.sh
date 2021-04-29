@@ -21,10 +21,6 @@ else
   exit 1
 fi
 
- #Mounting bucket to VM
-
-gcsfuse -o nonemptu -o allow_other wp-back-bucket /mnt/
-
   #Creating symlink to work directory
 
 ln -s /mnt/ /var/www/
