@@ -1,7 +1,12 @@
 #Importing module for output dependencies in VPC-network
-
-module "network" {
-  source = "../vpc-network/"
+variable "vpc-id" {
+  type = string
+}
+variable "master-connection" {
+  type = string
+}
+variable "replica-connection" {
+  type = string
 }
 #Creating Databases
 
@@ -13,7 +18,7 @@ resource "google_sql_database_instance" "wordpress-db" {
   name             = "wordpress-db-master"
   database_version = "MYSQL_5_6"
   region           = "europe-west-3"
-  depends_on       = [module.network.master-connection]
+  depends_on       = [var.master-connection]
   deletion_protection = "false"
   settings {
     # Second-generation instance tiers are based on the machine
@@ -21,7 +26,7 @@ resource "google_sql_database_instance" "wordpress-db" {
     tier = "db-f1-micro"
     ip_configuration {
       ipv4_enabled    = false
-      private_network = module.network.vpc-network
+      private_network = var.vpc-id
     }
     backup_configuration {
       binary_log_enabled = true
@@ -33,7 +38,7 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
   name             = "wordpress-db-slave"
   database_version = "MYSQL_5_6"
   region           = "europe-west3"
-  depends_on       = [module.network.replica-connection]
+  depends_on       = [var.replica-connection]
   deletion_protection  = "false"
   master_instance_name = google_sql_database_instance.wordpress-db.name
   settings {
@@ -42,7 +47,7 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
     tier = "db-f1-micro"
     ip_configuration {
       ipv4_enabled    = false
-      private_network = module.network.vpc-network
+      private_network = var.vpc-id
     }
   }
   replica_configuration {

@@ -1,10 +1,12 @@
 #Importing module for output dependencies in VPC-network
-
-module "network" {
-  source = "../vpc-network/"
+variable "email" {
+  type = string
 }
-module "service-account" {
-  source = "../service-account"
+variable "pub-sub-id" {
+  type = string
+}
+variable "vpc-id" {
+  type = string
 }
 
 #Creating instance for bastion server
@@ -20,7 +22,7 @@ resource "google_compute_instance" "bastion-edu" {
     }
   }
   network_interface {
-    subnetwork = module.network.public-sub-id
+    subnetwork = var.pub-sub-id
     access_config {}
   }
 }
@@ -33,7 +35,7 @@ resource "google_compute_instance" "bastion-edu" {
 resource "google_compute_instance_template" "wordpress-template" {
   name        = "wordpress-template"
   tags = ["wordpress", "private"]
-  machine_type         = "e1-micro"
+  machine_type         = "e2-micro"
   can_ip_forward       = false
 
   scheduling {
@@ -48,11 +50,11 @@ resource "google_compute_instance_template" "wordpress-template" {
   }
 
   network_interface {
-    subnetwork = module.network.id
+    subnetwork = var.vpc-id
   }
 
   service_account {
-    email  = module.service-account.service-account-email
+    email  = var.email
     scopes = ["cloud-platform"]
   }
   metadata_startup_script = "$file(\"gcloud-startup-script.sh\")"
@@ -86,7 +88,7 @@ resource "google_compute_region_instance_group_manager" "wordpress-ig" {
 
 resource "google_compute_region_autoscaler" "wordpress-autoscaler" {
   name   = "wordpress-autoscaler"
-  region = "us-east1"
+  region = "europe-west-3"
   target = google_compute_region_instance_group_manager.wordpress-ig.id
   autoscaling_policy {
     max_replicas    = 2
