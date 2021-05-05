@@ -1,4 +1,6 @@
 - name : openvpn
   hosts: all
   roles:
-    - wp-deploy
+    - security
+    - bastion
+    - openvpn-client
