@@ -25,6 +25,7 @@ resource "google_compute_global_address" "private-ip-address" {
   purpose = "VPC_PEERING"
   address_type = "INTERNAL"
   prefix_length = 28
+  depends_on = [google_com]
   network = google_compute_subnetwork.private-subnetwork.id
 }
 resource "google_service_networking_connection" "master-private-vpc-db-connection" {

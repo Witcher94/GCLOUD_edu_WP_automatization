@@ -44,7 +44,7 @@ resource "google_compute_instance_template" "wordpress-template" {
   }
 
   disk {
-    source_image = "wordpress-combo-image"
+    source_image = "wordpress-image"
     auto_delete  = true
     boot         = true
   }
