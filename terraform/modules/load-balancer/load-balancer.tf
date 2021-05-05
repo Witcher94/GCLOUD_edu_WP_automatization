@@ -30,11 +30,11 @@ resource "google_compute_url_map" "default" {
 
 resource "google_compute_backend_service" "wordpress-backend" {
   backend {
-    group           = module.compute-engine.wp-ig
+    group           = var.ig-wp
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
   }
   name        = "wordpress-backend"
-  health_checks = module.compute-engine.wp-heath
+  health_checks = var.heal
 }
 
