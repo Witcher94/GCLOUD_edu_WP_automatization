@@ -3,4 +3,4 @@
   roles:
     - security
     - bastion
-    - openvpn-client
+    - client-openvpn
