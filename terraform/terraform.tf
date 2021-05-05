@@ -26,10 +26,12 @@ module "compute-engine" {
   email = module.service-account.service-account-email
   pub-sub-id = module.network.public-sub-id
   vpc-id = module.network.id
-  depends_on = [module.service-account] #start after module "service account"
+  depends_on = [module.network]#start after module "service account"
 }
 module "load-balancer" {
   source = "./modules/load-balancer"
+  ig-wp = module.compute-engine.wp-ig
+  heal = module.compute-engine.wp-heath
   depends_on = [module.compute-engine]
 }
 
