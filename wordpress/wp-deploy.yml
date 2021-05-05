@@ -1,0 +1,4 @@
+- name : wp-full-deploy
+  hosts: all
+  roles:
+    - wp-deploy

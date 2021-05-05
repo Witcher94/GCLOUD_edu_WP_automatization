@@ -1,0 +1,80 @@
+#install all dependencies for correct work of wordpress
+- name: installing all dependencies
+  apt:
+    name: '{{item}}'
+    state: installed
+    with_items:
+      - php
+      - php-curl
+      - php-common
+      - php-mbstring
+      - php-gd
+      - php-intl
+      - php-xml
+      - php-mysql
+      - php-fpm
+      - php-zip
+      - apache2
+      - unzip
+    become: true
+    when: "'web-servers' in group_names"
+
+#Enable apache2 service for normally work
+
+- name: enable apache
+  service:
+    name: apache2
+    enabled: yes
+  become: true
+  when: "'web-servers' in group_names"
+
+#Change config for apache2 default-site
+
+- name: upload config for apache default site
+  ansible.builtin.copy:
+    src: /ansible/roles/wordpress/files/000-default.conf
+    dest: /etc/apache2/sites-enabled/000-default.conf
+    owner: okhab
+    mode: '0644'
+  become: true
+  when: "'web-servers' in group_names"
+
+#Change config for upload dir
+
+- name: upload config for apache dir.conf
+  ansible.builtin.copy:
+    src: /ansible/roles/wp-deploy/files/dir.conf
+    dest: /etc/apache2/mods-enabled/dir.conf
+    owner: okhab
+    mode: '0644'
+  become: true
+  when: "'web-servers' in group_names"
+
+# Enabling rewrite mode for apache2
+
+- name: Enable rewrite module
+  apache2_module:
+    name: rewrite
+    state: present
+  become: true
+  when: "'web-servers' in group_names"
+
+#Change fuse.conf file for enable "allow_other" attribute
+
+- name: upload fuse.conf
+  ansible.builtin.copy:
+    src: /ansible/roles/wp-deploy/files/fuse.conf
+    dest: /etc/fuse.conf
+    owner: pfaka
+    mode: '0644'
+  become: true
+  when: "'web-servers' in group_names"
+
+#Mounting bucket to vm
+
+- name: Create symbolic link
+  file:
+    src: "/mnt"
+    dest: "/var/www/"
+    state: link
+  when: "'web-servers' in group_names"

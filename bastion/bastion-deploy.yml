@@ -1,0 +1,4 @@
+- name : openvpn
+  hosts: all
+  roles:
+    - wp-deploy

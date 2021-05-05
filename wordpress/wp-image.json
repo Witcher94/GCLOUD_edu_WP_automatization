@@ -1,0 +1,22 @@
+{
+  "builders": [
+     {
+       "type": "googlecompute",
+       "account_file": "./cred/account.json",
+       "project_id": "pfaka-education-25433",
+       "source_image": "ubuntu-minimal-2004-lts",
+       "ssh_username": "pfaka",
+       "zone": "europe-west3-c",
+       "subnetwork": "public-subnetwork",
+       "machine_type": "e1-micro",
+       "image_description": "wordpress-machine-image",
+       "image_name": "wordpress-to-use-image"    }
+  ],
+  "provisioners":[
+    {
+      "type": "ansible",
+      "playbook_file": "./ansible/wp-install.yml",
+      "user": "pfaka"
+    }
+  ]
+}

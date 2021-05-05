@@ -1,0 +1,122 @@
+#Install all dependencies
+
+- name: Update dnf packages
+  become: true
+  dnf:
+    upgrade: yes
+
+- name: installing dependencies
+  dnf:
+    name: '{{item}}'
+    state: installed
+  with_items:
+    - update
+    - upgrade
+    - chrony
+    - epel-release
+    - openvpn
+    - easy-rsa
+
+#Enabling chronyd system process for time synchronisation
+
+- name: enable service chronyd
+  ansible.builtin.systemd:
+    name: chronyd.service
+    state: started
+    enabled: yes
+
+#Get certificates
+
+#Removing standard CA directory and creating our custom one
+- name: "Remove CA directory"
+  become: yes
+  file:
+    state: absent
+    path: "{{ ansible_env.HOME }}/openvpn-ca/"
+
+- name: "Create CA dir"
+  become: yes
+  command: make-cadir {{ ansible_env.HOME }}/openvpn-ca
+
+#Creating variables for creation CA and generation keys
+
+- name: Customize CA variable configuration
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/openvpn-ca/vars"
+    regexp: "^{{ item.property | regex_escape() }}="
+    line: "{{ item.property }}={{ item.value }}"
+  with_items:
+    - { property: 'export KEY_NAME', value: '"server"' }
+    - { property: 'export KEY_COUNTRY', value: '"UA"' }
+    - { property: 'export KEY_PROVINCE', value: '"CE"' }
+    - { property: 'export KEY_CITY', value: '"CE"' }
+    - { property: 'export KEY_ORG', value: '"SS"' }
+    - { property: 'export KEY_EMAIL', value: '"test@test.com"' }
+    - { property: 'export KEY_OU', value: '"test"' }
+    - { property: 'export KEY_CONFIG', value: '{{ ansible_env.HOME }}/openvpn-ca/openssl-1.0.0.cnf' }
+    - { property: 'export KEY_DIR', value: '{{ ansible_env.HOME }}/openvpn-ca/keys' }
+
+- name: "Build the certificate authority"
+  become: yes
+  shell: >
+    source vars;
+    ./clean-all;
+    yes "" | ./build-ca;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: "Build server certificate"
+  become: yes
+  shell: >
+    source vars;
+    ./build-key-server --batch server;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: "Build Diffie-Hellman parameters and key generation"
+  become: yes
+  shell: >
+    source vars;
+    yes "" | ./build-dh;
+    openvpn --genkey --secret keys/ta.key;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: "Copy key and certificates to /etc/openvpn"
+  become: yes
+  copy:
+    remote_src: yes
+    src: "{{ ansible_env.HOME }}/openvpn-ca/keys/{{ item }}"
+    dest: "/etc/openvpn/"
+  with_items:
+    - "ca.crt"
+    - "server.crt"
+    - "server.key"
+    - "ta.key"
+    - "dh2048.pem"
+
+#Copieing config file of the server
+
+- name: upload server.conf file
+  ansible.builtin.copy:
+    src: "/ansible/roles/bastion/files/server.conf"
+    dest: "/etc/openvpn/server/server.conf"
+    owner: pfaka
+    mode: '0644'
+  become: true
+
+- name: Start openvpn systemd service
+  become: true
+  systemd:
+    name: openvpn@server
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+#Client certificates
+
+
+
