@@ -4,7 +4,7 @@ variable "ig-wp" {
   type = string
 }
 variable "heal" {
-  type = string
+  type = list
 }
 #Createing wordpress load-balancer
 resource "google_compute_global_address" "wordpress-front" {
