@@ -1,23 +1,39 @@
 #install all dependencies for correct work of wordpress
+
+- name: exporting repo for installing gcsfuse
+  ansible.builtin.shell:
+    cmd:
+      - export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
+      - echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
+      - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+
+- name: upgrade system
+  apt:
+    upgrade: yes, dist
+    update_cache: true
+  become: true
+
+
 - name: installing all dependencies
   apt:
-    name: '{{item}}'
-    state: installed
-    with_items:
-      - php
-      - php-curl
-      - php-common
-      - php-mbstring
-      - php-gd
-      - php-intl
-      - php-xml
-      - php-mysql
-      - php-fpm
-      - php-zip
-      - apache2
-      - unzip
-    become: true
-    when: "'web-servers' in group_names"
+    name:
+    - php
+    - php-curl
+    - php-common
+    - php-mbstring
+    - php-gd
+    - php-intl
+    - php-xml
+    - php-mysql
+    - php-fpm
+    - php-zip
+    - apache2
+    - unzip
+    - gcsfuse
+  state: present
+  become: true
+
 
 #Enable apache2 service for normally work
 
@@ -26,7 +42,6 @@
     name: apache2
     enabled: yes
   become: true
-  when: "'web-servers' in group_names"
 
 #Change config for apache2 default-site
 
@@ -34,10 +49,9 @@
   ansible.builtin.copy:
     src: /ansible/roles/wordpress/files/000-default.conf
     dest: /etc/apache2/sites-enabled/000-default.conf
-    owner: okhab
+    owner: pfaka
     mode: '0644'
   become: true
-  when: "'web-servers' in group_names"
 
 #Change config for upload dir
 
@@ -45,10 +59,9 @@
   ansible.builtin.copy:
     src: /ansible/roles/wp-deploy/files/dir.conf
     dest: /etc/apache2/mods-enabled/dir.conf
-    owner: okhab
+    owner: pfaka
     mode: '0644'
   become: true
-  when: "'web-servers' in group_names"
 
 # Enabling rewrite mode for apache2
 
@@ -57,7 +70,6 @@
     name: rewrite
     state: present
   become: true
-  when: "'web-servers' in group_names"
 
 #Change fuse.conf file for enable "allow_other" attribute
 
@@ -68,13 +80,3 @@
     owner: pfaka
     mode: '0644'
   become: true
-  when: "'web-servers' in group_names"
-
-#Mounting bucket to vm
-
-- name: Create symbolic link
-  file:
-    src: "/mnt"
-    dest: "/var/www/"
-    state: link
-  when: "'web-servers' in group_names"
