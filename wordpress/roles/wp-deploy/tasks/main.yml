@@ -25,7 +25,7 @@
 
 - name: upload script for installing gcsfuse
   ansible.builtin.copy:
-    src: ../files/gcsfuse-install.sh
+    src: ../files/install-gcsfuse.sh
     dest: /tmp/gcsfuse-install.sh
     owner: pfaka
     mode: '0755'
