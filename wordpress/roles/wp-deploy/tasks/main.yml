@@ -2,7 +2,7 @@
 - name: upgrade system
   apt:
     upgrade: yes
-    update_cache: true
+    update_cache: 'true'
   become: true
 
 - name: installing all dependencies
@@ -23,8 +23,16 @@
     state: present
   become: true
 
+- name: upload script for installing gcsfuse
+  ansible.builtin.copy:
+    src: ~/dangerzone/demo/packer/ansible/roles/wp-combo/files/gcsfuse-install.sh
+    dest: /tmp/gcsfuse-install.sh
+    owner: pfaka
+    mode: '0755'
+  become: true
+
 - name: run script for installing gcsfuse
-  shell: ../files/gcsfuse-install.sh
+  shell: /tmp/gcsfuse-install.sh
 
 #Enable apache2 service for normally work
 
