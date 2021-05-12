@@ -25,7 +25,7 @@
 
 - name: upload script for installing gcsfuse
   ansible.builtin.copy:
-    src: ~/dangerzone/demo/packer/ansible/roles/wp-combo/files/gcsfuse-install.sh
+    src: ../files/gcsfuse-install.sh
     dest: /tmp/gcsfuse-install.sh
     owner: pfaka
     mode: '0755'
