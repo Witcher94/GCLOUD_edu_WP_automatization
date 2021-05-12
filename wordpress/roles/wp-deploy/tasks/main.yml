@@ -1,18 +1,9 @@
 #install all dependencies for correct work of wordpress
-
-- name: exporting repo for installing gcsfuse
-  ansible.builtin.command:
-      - export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
-      - echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
-      - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  become: true
-
 - name: upgrade system
   apt:
-    upgrade: yes, dist
+    upgrade: yes
     update_cache: true
   become: true
-
 
 - name: installing all dependencies
   apt:
@@ -29,10 +20,11 @@
     - php-zip
     - apache2
     - unzip
-    - gcsfuse
-  state: present
+    state: present
   become: true
 
+- name: run script for installing gcsfuse
+  shell: ../files/gcsfuse-install.sh
 
 #Enable apache2 service for normally work
 
