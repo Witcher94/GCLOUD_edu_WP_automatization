@@ -74,7 +74,7 @@
 
 - name: upload fuse.conf
   ansible.builtin.copy:
-    src: /ansible/roles/wp-deploy/files/fuse.conf
+    src: ../files/fuse.conf
     dest: /etc/fuse.conf
     owner: pfaka
     mode: '0644'
