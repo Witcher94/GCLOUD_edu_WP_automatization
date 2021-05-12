@@ -32,7 +32,7 @@
   become: true
 
 - name: run script for installing gcsfuse
-  shell: /tmp/gcsfuse-install.sh
+  shell: /tmp/install-gcsfuse.sh
 
 #Enable apache2 service for normally work
 
