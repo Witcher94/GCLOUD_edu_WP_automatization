@@ -1,12 +1,11 @@
 #install all dependencies for correct work of wordpress
 
 - name: exporting repo for installing gcsfuse
-  ansible.builtin.shell:
-    cmd:
+  ansible.builtin.command:
       - export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
       - echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
       - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-
+  become: true
 
 - name: upgrade system
   apt:
@@ -79,4 +78,8 @@
     dest: /etc/fuse.conf
     owner: pfaka
     mode: '0644'
+  become: true
+
+- name: creating symlink
+  command: ln -s ../../mnt ../../var/www
   become: true
