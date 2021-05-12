@@ -46,7 +46,7 @@
 
 - name: upload config for apache default site
   ansible.builtin.copy:
-    src: /ansible/roles/wordpress/files/000-default.conf
+    src: ../files/000-default.conf
     dest: /etc/apache2/sites-enabled/000-default.conf
     owner: pfaka
     mode: '0644'
@@ -56,7 +56,7 @@
 
 - name: upload config for apache dir.conf
   ansible.builtin.copy:
-    src: /ansible/roles/wp-deploy/files/dir.conf
+    src: ../files/dir.conf
     dest: /etc/apache2/mods-enabled/dir.conf
     owner: pfaka
     mode: '0644'
