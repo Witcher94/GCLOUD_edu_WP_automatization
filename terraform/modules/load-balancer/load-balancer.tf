@@ -6,25 +6,39 @@ variable "ig-wp" {
 variable "heal" {
   type = list
 }
-#Createing wordpress load-balancer
-resource "google_compute_global_address" "wordpress-front" {
-  name = "wordpress-front"
-}
-
-resource "google_compute_global_forwarding_rule" "https" {
-  count      = var.enable_ssl ? 1 : 0
-  name       = "${var.name}-https-rule"
-  target     = google_compute_target_https_proxy.default[0].self_link
-  ip_address = google_compute_global_address.wordpress-front.address
-  port_range = "443"
-  depends_on = [google_compute_global_address.wordpress-front]
-}
 
 resource "google_compute_target_https_proxy" "default" {
-  count   = var.enable_ssl ? 1 : 0
-  name    = "${var.name}-https-proxy"
-  url_map = var.url_map
-  ssl_certificates = var.ssl_certificates
+  name             = "test-proxy"
+  url_map          = google_compute_url_map.default.id
+  ssl_certificates = [google_compute_ssl_certificate.default.id]
+}
+
+resource "google_compute_ssl_certificate" "default" {
+  name        = "my-certificate"
+  private_key = file("./private.key")
+  certificate = file("./certificate.crt")
+}
+
+resource "google_compute_url_map" "default" {
+  name        = "url-map"
+  description = "a description"
+
+  default_service = google_compute_backend_service.wordpress-backend.id
+
+  host_rule {
+    hosts        = ["pfaka.pp.ua"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = google_compute_backend_service.wordpress-backend.id
+
+    path_rule {
+      paths   = ["/*"]
+      service = google_compute_backend_service.wordpress-backend.id
+    }
+  }
 }
 
 resource "google_compute_backend_service" "wordpress-backend" {
