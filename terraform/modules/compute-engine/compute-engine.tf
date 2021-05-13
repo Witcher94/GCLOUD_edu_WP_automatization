@@ -88,7 +88,7 @@ resource "google_compute_region_instance_group_manager" "wordpress-ig" {
 
 resource "google_compute_region_autoscaler" "wordpress-autoscaler" {
   name   = "wordpress-autoscaler"
-  region = "europe-west-3"
+  region = "europe-west3"
   target = google_compute_region_instance_group_manager.wordpress-ig.id
   autoscaling_policy {
     max_replicas    = 2
