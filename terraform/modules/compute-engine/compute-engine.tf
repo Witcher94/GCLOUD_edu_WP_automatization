@@ -5,7 +5,7 @@ variable "email" {
 variable "pub-sub-id" {
   type = string
 }
-variable "vpc-id" {
+variable "priv-sub-id" {
   type = string
 }
 
@@ -44,13 +44,13 @@ resource "google_compute_instance_template" "wordpress-template" {
   }
 
   disk {
-    source_image = "wordpress-image"
+    source_image = "wordpress-to-use-image"
     auto_delete  = true
     boot         = true
   }
 
   network_interface {
-    subnetwork = var.vpc-id
+    subnetwork = var.priv-sub-id
   }
 
   service_account {

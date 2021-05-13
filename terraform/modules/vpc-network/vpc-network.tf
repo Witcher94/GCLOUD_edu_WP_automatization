@@ -119,3 +119,6 @@ output "vpc-network" {
 output "public-sub-id" {
   value = google_compute_subnetwork.public-subnetwork.id
 }
+output "private-sub-id" {
+  value = google_compute_subnetwork.private-subnetwork.id
+}
