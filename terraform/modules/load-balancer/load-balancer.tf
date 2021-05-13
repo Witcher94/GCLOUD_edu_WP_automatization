@@ -7,6 +7,11 @@ variable "heal" {
   type = list
 }
 
+
+resource "google_compute_global_address" "wordpress-front" {
+  name = "wordpress-front"
+}
+
 resource "google_compute_target_https_proxy" "default" {
   name             = "test-proxy"
   url_map          = google_compute_url_map.default.id
@@ -49,4 +54,8 @@ resource "google_compute_backend_service" "wordpress-backend" {
   }
   name        = "wordpress-backend"
   health_checks = var.heal
+}
+
+output "global-address" {
+  value = [google_compute_global_address.wordpress-front.address]
 }

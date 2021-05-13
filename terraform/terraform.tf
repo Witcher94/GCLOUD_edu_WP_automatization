@@ -34,4 +34,8 @@ module "load-balancer" {
   heal = module.compute-engine.wp-heath
   depends_on = [module.compute-engine]
 }
-
+module "dns" {
+  source = "./modules/DNS"
+  wp-address = module.load-balancer.global-address
+  depends_on = [module.load-balancer]
+}
