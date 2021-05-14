@@ -32,7 +32,15 @@
   become: true
 
 - name: run script for installing gcsfuse
-  shell: /tmp/install-gcsfuse.sh
+  shell: /tmp/gcsfuse-install.sh
+
+# Enabling rewrite mode for apache2
+
+- name: Enable rewrite module
+  apache2_module:
+    name: rewrite
+    state: present
+  become: true
 
 #Enable apache2 service for normally work
 
@@ -60,14 +68,6 @@
     dest: /etc/apache2/mods-enabled/dir.conf
     owner: pfaka
     mode: '0644'
-  become: true
-
-# Enabling rewrite mode for apache2
-
-- name: Enable rewrite module
-  apache2_module:
-    name: rewrite
-    state: present
   become: true
 
 #Change fuse.conf file for enable "allow_other" attribute

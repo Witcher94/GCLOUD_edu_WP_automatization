@@ -1,5 +1,5 @@
 gcsfuse -o nonempty -o allow_other wp-back-bucket /mnt
-ln -s /mnt /var/www
+ln -s /mnt /var/www/wordpress
 
 
 
