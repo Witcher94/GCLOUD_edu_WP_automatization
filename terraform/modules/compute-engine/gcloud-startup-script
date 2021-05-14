@@ -1,0 +1,11 @@
+gcsfuse -o nonempty -o allow_other wp-back-bucket /mnt
+
+
+
+
+
+
+
+
+
+

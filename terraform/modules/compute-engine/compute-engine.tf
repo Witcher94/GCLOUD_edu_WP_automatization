@@ -57,7 +57,7 @@ resource "google_compute_instance_template" "wordpress-template" {
     email  = var.email
     scopes = ["cloud-platform"]
   }
-  metadata_startup_script = "$file(\"gcloud-startup-script.sh\")"
+  metadata_startup_script = file("./modules/compute-engine/gcloud-startup-script")
 }
 
 #Creating instance-group group
