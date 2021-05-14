@@ -79,7 +79,3 @@
     owner: pfaka
     mode: '0644'
   become: true
-
-- name: creating symlink
-  command: ln -s ../../mnt ../../var/www
-  become: true
