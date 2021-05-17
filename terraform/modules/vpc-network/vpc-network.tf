@@ -68,7 +68,7 @@ resource "google_compute_firewall" "network-allow-web" {
     protocol = "tcp"
     ports    = ["80", "443"]
   }
-  source_ranges = ["10.10.10.16/28"]
+  source_ranges = ["0.0.0.0/0"]
 }
 resource "google_compute_firewall" "network-allow-sql" {
   name    = "network-allow-mysql"
