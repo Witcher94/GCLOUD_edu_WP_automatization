@@ -47,7 +47,7 @@
 - name: upload config for apache default site
   ansible.builtin.copy:
     src: ../files/000-default.conf
-    dest: /etc/apache2/sites-enabled/000-default.conf
+    dest: /etc/apache2/sites-available/000-default.conf
     owner: pfaka
     mode: '0644'
   become: true
