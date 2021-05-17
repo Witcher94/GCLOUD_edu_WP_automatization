@@ -42,14 +42,6 @@
     state: present
   become: true
 
-#Enable apache2 service for normally work
-
-- name: enable apache
-  service:
-    name: apache2
-    enabled: yes
-  become: true
-
 #Change config for apache2 default-site
 
 - name: upload config for apache default site
@@ -68,6 +60,14 @@
     dest: /etc/apache2/mods-enabled/dir.conf
     owner: pfaka
     mode: '0644'
+  become: true
+
+#Enable apache2 service for normally work
+
+- name: enable apache
+  service:
+    name: apache2
+    enabled: yes
   become: true
 
 #Change fuse.conf file for enable "allow_other" attribute
