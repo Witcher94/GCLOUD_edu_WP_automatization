@@ -15,11 +15,14 @@ resource "google_compute_target_https_proxy" "httpsProxy" {
   ssl_certificates = [google_compute_managed_ssl_certificate.sslCertificate.id]
 }
 
-resource "google_compute_managed_ssl_certificate" "sslCertificate" {
-  name = "new-cert"
+resource "google_compute_region_ssl_certificate" "sslCertificate" {
+  name_prefix = "wp-certificate"
+  description = "provided by terraform"
+  private_key = file("~/Downloads/private.key")
+  certificate = file("~/Downloads/certificate.crt")
 
-  managed {
-    domains = ["pfaka.pp.ua."]
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
