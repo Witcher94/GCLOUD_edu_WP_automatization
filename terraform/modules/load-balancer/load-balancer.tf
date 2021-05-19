@@ -1,13 +1,3 @@
-#Importing module for output dependencies in VPC-network
-
-variable "ig-wp" {
-  type = string
-}
-variable "heal" {
-  type = list
-}
-
-
 resource "google_compute_global_address" "wordpress-front" {
   name = "wordpress-front"
 }
@@ -21,36 +11,21 @@ resource "google_compute_global_forwarding_rule" "load-balancer-rule" {
 
 resource "google_compute_target_https_proxy" "httpsProxy" {
   name             = "test-proxy"
-  url_map          = google_compute_url_map.default.id
-  ssl_certificates = [google_compute_ssl_certificate.sslCertificates.id]
+  url_map          = google_compute_url_map.url-map.id
+  ssl_certificates = [google_compute_managed_ssl_certificate.sslCertificate.id]
 }
 
-resource "google_compute_ssl_certificate" "sslCertificates" {
-  name        = "my-certificate"
-  private_key = file("./private.key")
-  certificate = file("./certificate.crt")
+resource "google_compute_managed_ssl_certificate" "sslCertificate" {
+  name = "new-cert"
+
+  managed {
+    domains = ["pfaka.pp.ua."]
+  }
 }
 
-resource "google_compute_url_map" "default" {
+resource "google_compute_url_map" "url-map" {
   name        = "url-map"
-  description = "a description"
-
   default_service = google_compute_backend_service.wordpress-backend.id
-
-  host_rule {
-    hosts        = ["pfaka.pp.ua"]
-    path_matcher = "allpaths"
-  }
-
-  path_matcher {
-    name            = "allpaths"
-    default_service = google_compute_backend_service.wordpress-backend.id
-
-    path_rule {
-      paths   = ["/*"]
-      service = google_compute_backend_service.wordpress-backend.id
-    }
-  }
 }
 
 resource "google_compute_backend_service" "wordpress-backend" {
@@ -63,6 +38,3 @@ resource "google_compute_backend_service" "wordpress-backend" {
   health_checks = var.heal
 }
 
-output "global-address" {
-  value = [google_compute_global_address.wordpress-front.address]
-}

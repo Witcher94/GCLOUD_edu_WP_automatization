@@ -1,13 +1,3 @@
-#Importing module for output dependencies in VPC-network
-variable "vpc-id" {
-  type = string
-}
-variable "master-connection" {
-  type = string
-}
-variable "replica-connection" {
-  type = string
-}
 #Creating Databases
 
 resource "google_sql_database" "wordpress-database" {

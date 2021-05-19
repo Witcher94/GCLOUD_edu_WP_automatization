@@ -1,13 +1,3 @@
-#Importing module for output dependencies in VPC-network
-variable "email" {
-  type = string
-}
-variable "pub-sub-id" {
-  type = string
-}
-variable "priv-sub-id" {
-  type = string
-}
 
 #Creating instance for bastion server
 
@@ -110,13 +100,4 @@ resource "google_compute_health_check" "wp-heathcheck" {
   tcp_health_check {
     port = "80"
   }
-}
-
-#output variables for other modules
-
-output "wp-ig" {
-  value = google_compute_region_instance_group_manager.wordpress-ig.instance_group
-}
-output "wp-heath" {
-  value = [google_compute_health_check.wp-heathcheck.id]
 }

@@ -1,8 +1,3 @@
-#Importing variables for output dependencies in VPC-network
-variable "email" {
-  type = string
-}
-
 #Creating WP-bucket
 
 resource "google_storage_bucket" "wp-bucket" {

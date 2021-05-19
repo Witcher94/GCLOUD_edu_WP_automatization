@@ -1,6 +1,3 @@
-variable "wp-address" {
-  type = list
-}
 
 resource "google_dns_managed_zone" "pfaka-pp" {
   name     = "pfaka-pp"
