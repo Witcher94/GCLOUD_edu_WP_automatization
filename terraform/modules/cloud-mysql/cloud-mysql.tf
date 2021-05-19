@@ -5,7 +5,7 @@ resource "google_sql_database" "wordpress-database" {
   instance = google_sql_database_instance.wordpress-db.name
 }
 resource "google_sql_database_instance" "wordpress-db" {
-  name             = "wordpress-db-master"
+  name             = "wordpress-master"
   database_version = "MYSQL_5_6"
   region           = "europe-west3"
   depends_on       = [var.master-connection]
@@ -25,7 +25,7 @@ resource "google_sql_database_instance" "wordpress-db" {
   }
 }
 resource "google_sql_database_instance" "wordpress-db-replica" {
-  name             = "wordpress-db-slave"
+  name             = "wordpress-slave"
   database_version = "MYSQL_5_6"
   region           = "europe-west3"
   depends_on       = [var.replica-connection]
