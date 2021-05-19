@@ -12,10 +12,10 @@ resource "google_compute_global_forwarding_rule" "load-balancer-rule" {
 resource "google_compute_target_https_proxy" "httpsProxy" {
   name             = "test-proxy"
   url_map          = google_compute_url_map.url-map.id
-  ssl_certificates = [google_compute_managed_ssl_certificate.sslCertificate.id]
+  ssl_certificates = [google_compute_ssl_certificate.sslCertificate.id]
 }
 
-resource "google_compute_region_ssl_certificate" "sslCertificate" {
+resource "google_compute_ssl_certificate" "sslCertificate" {
   name_prefix = "wp-certificate"
   description = "provided by terraform"
   private_key = file("~/Downloads/private.key")
