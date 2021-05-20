@@ -11,3 +11,9 @@ resource "google_dns_record_set" "pfaka-pp" {
   rrdatas      = var.wp-address
   ttl          = 300
 }
+resource "dns_cname_record" "cname" {
+  zone  = "pfaka.com."
+  name  = "cname"
+  cname = "www.pfaka.pp.ua"
+  ttl   = 300
+}
