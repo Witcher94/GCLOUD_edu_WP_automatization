@@ -44,3 +44,15 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
       failover_target = true
   }
 }
+resource "google_sql_user" "users" {
+  name       = "wordpressuser"
+  instance   = google_sql_database_instance.wordpress-db.name
+  host       = "%"
+  password   = "wordpresspassword"
+  depends_on = [google_sql_database_instance.wordpress-db]
+}
+resource "google_sql_database" "database" {
+  name       = "wordpress"
+  instance   = google_sql_database_instance.wordpress-db
+  depends_on = [google_sql_database_instance.wordpress-db]
+}
