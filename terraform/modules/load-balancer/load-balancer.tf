@@ -2,11 +2,18 @@ resource "google_compute_global_address" "wordpress-front" {
   name = "wordpress-front"
 }
 
-resource "google_compute_global_forwarding_rule" "load-balancer-rule" {
-  name                  = "wordpress-forwarding-rule"
-  ip_address            = google_compute_global_address.wordpress-front.address
-  port_range            = "443"
-  target                = google_compute_target_https_proxy.httpsProxy.id
+resource "google_compute_forwarding_rule" "load-balancer-rule" {
+  name                  = "website-forwarding-rule"
+  region                = "europe-west3"
+  port_range            = 80
+  backend_service       = google_compute_backend_service.wordpress-backend.id
+}
+
+resource "google_compute_forwarding_rule" "load-balancer-rule" {
+  name                  = "https-website-forwarding-rule"
+  region                = "europe-west3"
+  port_range            = 443
+  backend_service       = google_compute_backend_service.wordpress-backend.id
 }
 
 resource "google_compute_target_https_proxy" "httpsProxy" {

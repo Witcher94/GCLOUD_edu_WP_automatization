@@ -1,4 +1,4 @@
-gcsfuse -o nonempty -o allow_other wp-back-bucket /mnt
+gcsfuse -o nonempty -o allow_other --dir-mode 755 wp-back-bucket /mnt
 ln -s /mnt/wordpress /var/www/
 
 
