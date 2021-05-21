@@ -2,18 +2,11 @@ resource "google_compute_global_address" "wordpress-front" {
   name = "wordpress-front"
 }
 
-resource "google_compute_forwarding_rule" "load-balancer-rule" {
-  name                  = "website-forwarding-rule"
-  region                = "europe-west3"
-  port_range            = 80
-  backend_service       = google_compute_backend_service.wordpress-backend.id
-}
-
-resource "google_compute_forwarding_rule" "load-balancer-rule" {
+resource "google_compute_global_forwarding_rule" "load-balancer-rule" {
   name                  = "https-website-forwarding-rule"
-  region                = "europe-west3"
+  ip_address = google_compute_global_address.wordpress-front.address
   port_range            = 443
-  backend_service       = google_compute_backend_service.wordpress-backend.id
+  target = google_compute_target_https_proxy.httpsProxy.id
 }
 
 resource "google_compute_target_https_proxy" "httpsProxy" {
@@ -46,5 +39,29 @@ resource "google_compute_backend_service" "wordpress-backend" {
   }
   name        = "wordpress-backend"
   health_checks = var.heal
+}
+
+#This is a dummy rule for http -> https redirect
+
+resource "google_compute_url_map" "http-redirect" {
+  name = "http-redirect"
+
+  default_url_redirect {
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"  // 301 redirect
+    strip_query            = false
+    https_redirect         = true  // this is the magic
+  }
+}
+
+resource "google_compute_target_http_proxy" "http-redirect" {
+  name    = "http-redirect"
+  url_map = google_compute_url_map.http-redirect.self_link
+}
+
+resource "google_compute_global_forwarding_rule" "http-redirect" {
+  name       = "http-redirect"
+  target     = google_compute_target_http_proxy.http-redirect.self_link
+  ip_address = google_compute_global_address.wordpress-front.address
+  port_range = "80"
 }
 
