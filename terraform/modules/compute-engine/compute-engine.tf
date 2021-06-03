@@ -23,10 +23,10 @@ resource "google_compute_instance" "bastion-edu" {
 #Creating Instance-Template
 
 resource "google_compute_instance_template" "wordpress-template" {
-  name        = "wordpress-template"
-  tags = ["wordpress", "private"]
-  machine_type         = "e2-micro"
-  can_ip_forward       = false
+  name           = "wordpress-template"
+  tags           = ["wordpress", "private"]
+  machine_type   = "e2-micro"
+  can_ip_forward = false
 
   scheduling {
     automatic_restart   = true
@@ -53,13 +53,13 @@ resource "google_compute_instance_template" "wordpress-template" {
 #Creating instance-group group
 
 resource "google_compute_region_instance_group_manager" "wordpress-ig" {
-  name = "wordpress-ig"
+  name               = "wordpress-ig"
   base_instance_name = "wordpress"
-  region = "europe-west3"
+  region             = "europe-west3"
   distribution_policy_zones = [
     "europe-west3-a",
     "europe-west3-b",
-    "europe-west3-c"]
+  "europe-west3-c"]
 
   version {
     instance_template = google_compute_instance_template.wordpress-template.id
@@ -69,7 +69,7 @@ resource "google_compute_region_instance_group_manager" "wordpress-ig" {
     port = 80
   }
   auto_healing_policies {
-    health_check = google_compute_health_check.wp-heathcheck.id
+    health_check      = google_compute_health_check.wp-heathcheck.id
     initial_delay_sec = 300
 
   }

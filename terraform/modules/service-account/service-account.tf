@@ -1,6 +1,6 @@
 #Creating а service account for for further work
 
 resource "google_service_account" "wp-service-account" {
-  account_id   = "wp-service"
+  account_id = "wp-service"
 }
 

@@ -1,3 +1,3 @@
 variable "wp-address" {
-  type = list
+  type = list(any)
 }

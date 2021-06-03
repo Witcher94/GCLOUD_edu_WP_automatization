@@ -3,10 +3,10 @@ resource "google_compute_global_address" "wordpress-front" {
 }
 
 resource "google_compute_global_forwarding_rule" "load-balancer-rule" {
-  name                  = "https-website-forwarding-rule"
+  name       = "https-website-forwarding-rule"
   ip_address = google_compute_global_address.wordpress-front.address
-  port_range            = 443
-  target = google_compute_target_https_proxy.httpsProxy.id
+  port_range = 443
+  target     = google_compute_target_https_proxy.httpsProxy.id
 }
 
 resource "google_compute_target_https_proxy" "httpsProxy" {
@@ -27,7 +27,7 @@ resource "google_compute_ssl_certificate" "sslCertificate" {
 }
 
 resource "google_compute_url_map" "url-map" {
-  name        = "url-map"
+  name            = "url-map"
   default_service = google_compute_backend_service.wordpress-backend.id
 }
 
@@ -37,7 +37,7 @@ resource "google_compute_backend_service" "wordpress-backend" {
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
   }
-  name        = "wordpress-backend"
+  name          = "wordpress-backend"
   health_checks = var.heal
 }
 
@@ -47,9 +47,9 @@ resource "google_compute_url_map" "http-redirect" {
   name = "http-redirect"
 
   default_url_redirect {
-    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"  // 301 redirect
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT" // 301 redirect
     strip_query            = false
-    https_redirect         = true  // this is the magic
+    https_redirect         = true // this is the magic
   }
 }
 

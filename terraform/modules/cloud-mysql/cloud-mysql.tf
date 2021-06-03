@@ -5,10 +5,10 @@ resource "google_sql_database" "wordpress-database" {
   instance = google_sql_database_instance.wordpress-db.name
 }
 resource "google_sql_database_instance" "wordpress-db" {
-  name             = "wordpress-master"
-  database_version = "MYSQL_5_6"
-  region           = "europe-west3"
-  depends_on       = [var.master-connection]
+  name                = "wordpress-master"
+  database_version    = "MYSQL_5_6"
+  region              = "europe-west3"
+  depends_on          = [var.master-connection]
   deletion_protection = "false"
   settings {
     # Second-generation instance tiers are based on the machine
@@ -25,10 +25,10 @@ resource "google_sql_database_instance" "wordpress-db" {
   }
 }
 resource "google_sql_database_instance" "wordpress-db-replica" {
-  name             = "wordpress-slave"
-  database_version = "MYSQL_5_6"
-  region           = "europe-west3"
-  depends_on       = [var.replica-connection]
+  name                 = "wordpress-slave"
+  database_version     = "MYSQL_5_6"
+  region               = "europe-west3"
+  depends_on           = [var.replica-connection]
   deletion_protection  = "false"
   master_instance_name = google_sql_database_instance.wordpress-db.name
   settings {
@@ -41,7 +41,7 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
     }
   }
   replica_configuration {
-      failover_target = true
+    failover_target = true
   }
 }
 resource "google_sql_user" "users" {

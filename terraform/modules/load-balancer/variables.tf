@@ -3,6 +3,6 @@ variable "ig-wp" {
   type = string
 }
 variable "heal" {
-  type = list
+  type = list(any)
 }
 
