@@ -3,12 +3,12 @@
 
 resource "google_compute_instance" "bastion-edu" {
   name         = "bastion-edu"
-  machine_type = "e2-micro"
-  zone         = "europe-west3-c"
-  tags         = ["bastion", "public"]
+  machine_type = var.machine
+  zone         = var.zone
+  tags         = var.tags
   boot_disk {
     initialize_params {
-      image = "ubuntu-minimal-2004-lts"
+      image = var.image
     }
   }
   network_interface {
@@ -24,8 +24,8 @@ resource "google_compute_instance" "bastion-edu" {
 
 resource "google_compute_instance_template" "wordpress-template" {
   name           = "wordpress-template"
-  tags           = ["wordpress", "private"]
-  machine_type   = "e2-micro"
+  tags           = var.tags
+  machine_type   = var.machine
   can_ip_forward = false
 
   scheduling {

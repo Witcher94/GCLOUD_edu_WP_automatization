@@ -6,8 +6,8 @@ resource "google_sql_database" "wordpress-database" {
 }
 resource "google_sql_database_instance" "wordpress-db" {
   name                = "wordpress-master"
-  database_version    = "MYSQL_5_6"
-  region              = "europe-west3"
+  database_version    = var.db_version
+  region              = var.region
   depends_on          = [var.master-connection]
   deletion_protection = "false"
   settings {
@@ -26,8 +26,8 @@ resource "google_sql_database_instance" "wordpress-db" {
 }
 resource "google_sql_database_instance" "wordpress-db-replica" {
   name                 = "wordpress-slave"
-  database_version     = "MYSQL_5_6"
-  region               = "europe-west3"
+  database_version     = var.db_version
+  region               = var.region
   depends_on           = [var.replica-connection]
   deletion_protection  = "false"
   master_instance_name = google_sql_database_instance.wordpress-db.name
@@ -45,14 +45,14 @@ resource "google_sql_database_instance" "wordpress-db-replica" {
   }
 }
 resource "google_sql_user" "users" {
-  name       = "wordpressuser"
+  name       = var.username
   instance   = google_sql_database_instance.wordpress-db.name
   host       = "%"
-  password   = "wordpresspassword"
+  password   = var.password
   depends_on = [google_sql_database_instance.wordpress-db]
 }
 resource "google_sql_database" "database" {
-  name       = "wordpress"
+  name       = var.database
   instance   = google_sql_database_instance.wordpress-db
   depends_on = [google_sql_database_instance.wordpress-db]
 }

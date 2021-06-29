@@ -17,7 +17,6 @@ resource "google_compute_target_https_proxy" "httpsProxy" {
 
 resource "google_compute_ssl_certificate" "sslCertificate" {
   name_prefix = "wp-certificate"
-  description = "provided by terraform"
   private_key = file("~/Downloads/private.key")
   certificate = file("~/Downloads/certificate.crt")
 
@@ -44,7 +43,7 @@ resource "google_compute_backend_service" "wordpress-backend" {
 #This is a dummy rule for http -> https redirect
 
 resource "google_compute_url_map" "http-redirect" {
-  name = "http-redirect"
+  name = var.name
 
   default_url_redirect {
     redirect_response_code = "MOVED_PERMANENTLY_DEFAULT" // 301 redirect
@@ -54,12 +53,12 @@ resource "google_compute_url_map" "http-redirect" {
 }
 
 resource "google_compute_target_http_proxy" "http-redirect" {
-  name    = "http-redirect"
+  name    = var.name
   url_map = google_compute_url_map.http-redirect.self_link
 }
 
 resource "google_compute_global_forwarding_rule" "http-redirect" {
-  name       = "http-redirect"
+  name       = var.name
   target     = google_compute_target_http_proxy.http-redirect.self_link
   ip_address = google_compute_global_address.wordpress-front.address
   port_range = "80"
