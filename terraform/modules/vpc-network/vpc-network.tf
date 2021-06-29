@@ -8,13 +8,13 @@ resource "google_compute_network" "vpc-network" {
 resource "google_compute_subnetwork" "public-subnetwork" {
   name          = "bastion-sub"
   ip_cidr_range = "10.10.10.0/28"
-  region        = "europe-west3"
+  region        = var.region
   network       = google_compute_network.vpc-network.id
 }
 resource "google_compute_subnetwork" "private-subnetwork" {
   name          = "wp-sub"
   ip_cidr_range = "10.10.10.16/28"
-  region        = "europe-west3"
+  region        = var.region
   network       = google_compute_network.vpc-network.id
 }
 
@@ -85,7 +85,7 @@ resource "google_compute_firewall" "network-allow-sql" {
 
 resource "google_compute_router" "vpc-network-router" {
   name    = "vpc-network-router"
-  region  = "europe-west3"
+  region  = var.region
   network = google_compute_network.vpc-network.id
 }
 

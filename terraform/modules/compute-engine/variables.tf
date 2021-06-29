@@ -5,6 +5,10 @@ variable "email" {
 variable "pub-sub-id" {
   type = string
 }
-variable "priv-sub-id" {
+variable "private-sub-id" {
   type = string
+}
+variable "region" {
+  type =  string
+  default = "europe-west3"
 }

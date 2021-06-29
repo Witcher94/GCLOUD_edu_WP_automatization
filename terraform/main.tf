@@ -22,7 +22,7 @@ module "compute-engine" {
   source      = "./modules/compute-engine"
   email       = module.service-account.service-account-email
   pub-sub-id  = module.network.public-sub-id
-  priv-sub-id = module.network.private-sub-id
+  private-sub-id = module.network.private-sub-id
   depends_on  = [module.network] #start after module "service account"
 }
 module "load-balancer" {
