@@ -6,6 +6,6 @@ variable "heal" {
   type = list(any)
 }
 variable "name" {
-  type = string
+  type    = string
   default = "http-redirect"
 }

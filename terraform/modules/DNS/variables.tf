@@ -2,6 +2,6 @@ variable "wp-address" {
   type = list(any)
 }
 variable "dns-name" {
-  type = string
+  type    = string
   default = "pfaka.pp.ua."
 }

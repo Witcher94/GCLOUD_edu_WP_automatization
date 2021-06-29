@@ -59,7 +59,7 @@ resource "google_compute_region_instance_group_manager" "wordpress-ig" {
   distribution_policy_zones = [
     "europe-west3-a",
     "europe-west3-b",
-    "europe-west3-c"]
+  "europe-west3-c"]
 
   version {
     instance_template = google_compute_instance_template.wordpress-template.id

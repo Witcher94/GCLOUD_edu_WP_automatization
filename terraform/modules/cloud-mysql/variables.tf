@@ -15,20 +15,20 @@ variable "region" {
 }
 variable "db_version" {
   description = "Default Database version"
-  type = string
-  default = "MYSQL_5_6"
+  type        = string
+  default     = "MYSQL_5_6"
 }
 variable "username" {
   description = "Don't leave credentials in this section"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 variable "password" {
   description = "Don't leave credentials in this section"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 variable "database" {
-  type = string
+  type    = string
   default = "wordpress"
 }
